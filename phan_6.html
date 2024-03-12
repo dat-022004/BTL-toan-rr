@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thuật toán Prim</title>
+    <style>
+        /* Đặt màu nền cho toàn bộ trang */
+        body {
+            background-color: #fafafa;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Căn giữa và định dạng tiêu đề */
+        h2 {
+            text-align: center;
+            color: #3c3c3c;
+            font-size: 2em;
+        }
+
+        /* Căn giữa và định dạng đoạn văn */
+        p {
+            text-align: center;
+            color: #6c6c6c;
+            font-size: 1.2em;
+        }
+
+        /* Định dạng nút */
+        button {
+            display: block;
+            width: 200px;
+            height: 50px;
+            margin: 20px auto;
+            background-color: #008CBA;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        /* Thay đổi màu nút khi di chuột qua */
+        button:hover {
+            background-color: #007B8A;
+        }
+
+        /* Căn giữa và định dạng kết quả */
+        pre {
+            width: 10%;
+            margin: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #fff;
+            color: #333;
+            font-size: 1.2em;
+            text-align: left;
+            white-space: pre-line;
+        }
+    </style>
+    <script>
+        // Hàm thực hiện thuật toán Prim
+        function prim(graph) {
+            // Khởi tạo mảng cha, khoa và daXet
+            let cha = [];
+            let khoa = [];
+            let daXet = [];
+            let soDinh = graph.length;
+            // Đặt khoa[i] = vô cực và daXet[i] = false cho mọi đỉnh i
+            for (let i = 0; i < soDinh; i++) {
+                khoa[i] = Infinity;
+                daXet[i] = false;
+            }
+            // Đặt khoa[0] = 0 và cha[0] = -1 để bắt đầu từ đỉnh 0
+            khoa[0] = 0;
+            cha[0] = -1;
+            // Thêm tất cả các đỉnh vào cây
+            for (let i = 0; i < soDinh - 1; i++) {
+                // Tìm đỉnh u có khoa[u] nhỏ nhất mà chưa được thêm vào cây
+                let u = timKhoaNhoNhat(khoa, daXet);
+                // Đánh dấu đỉnh u đã được thêm vào cây
+                daXet[u] = true;
+                // Cập nhật khoa[v] và cha[v] cho mọi đỉnh v kề với u mà chưa được thêm vào cây
+                for (let v = 0; v < soDinh; v++) {
+                    if (graph[u][v] && daXet[v] == false && graph[u][v] < khoa[v]) {
+                        cha[v] = u;
+                        khoa[v] = graph[u][v];
+                    }
+                }
+            }
+            // Trả về mảng cha biểu diễn cây khung nhỏ nhất
+            return cha;
+        }
+
+        // Hàm tìm đỉnh có khoa nhỏ nhất mà chưa được thêm vào cây
+        function timKhoaNhoNhat(khoa, daXet) {
+            let min = Infinity;
+            let chiSoMin;
+            for (let v = 0; v < khoa.length; v++) {
+                if (daXet[v] == false && khoa[v] < min) {
+                    min = khoa[v];
+                    chiSoMin = v;
+                }
+            }
+            return chiSoMin;
+        }
+
+        // Hàm in kết quả
+        function inKetQua(cha, graph) {
+            let ketQua = 'Cạnh   Trọng số\n';
+            for (let i = 1; i < graph.length; i++) {
+                ketQua += cha[i] + ' - ' + i + '   ' + graph[i][cha[i]] + '\n';
+            }
+            return ketQua;
+        }
+
+        // Hàm chạy thuật toán Prim và in kết quả
+        function chay() {
+            // Khởi tạo ma trận kề của đồ thị
+            let graph = [
+                [0, 2, 0, 6, 0],
+                [2, 0, 3, 8, 5],
+                [0, 3, 0, 0, 7],
+                [6, 8, 0, 0, 9],
+                [0, 5, 7, 9, 0]
+            ];
+            // Thực hiện thuật toán Prim
+            let cha = prim(graph);
+            // In kết quả
+            let ketQua = inKetQua(cha, graph);
+            document.getElementById('ketQua').innerText = ketQua;
+        }
+    </script>
+</head>
+<body>
+    <h2>Thuật toán Prim</h2>
+    <p>Thuật toán Prim tìm cây khung nhỏ nhất của một đồ thị.</p>
+    <button onclick="chay()">In kết quả</button>
+    <pre id="ketQua"></pre>
+</body>
+</html>

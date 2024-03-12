@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Floyd-Warshall Algorithm</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        h2, h3 {
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-bottom: 20px;
+            color: green;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script>
+        // Hàm thực hiện thuật toán Floyd-Warshall
+        function floydWarshall(matrix) {
+            // Khởi tạo mảng dist bằng cách sao chép ma trận đầu vào
+            let dist = [];
+            for (let i = 0; i < matrix.length; i++) {
+                dist[i] = matrix[i].slice();
+            }
+
+            // Duyệt qua tất cả các đỉnh
+            for (let k = 0; k < matrix.length; k++) {
+                for (let i = 0; i < matrix.length; i++) {
+                    for (let j = 0; j < matrix.length; j++) {
+                        // Nếu đường đi qua đỉnh k ngắn hơn, cập nhật dist[i][j]
+                        if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                            dist[i][j] = dist[i][k] + dist[k][j];
+                        }
+                    }
+                }
+            }
+
+            // Trả về ma trận dist, chứa đường đi ngắn nhất giữa mọi cặp đỉnh
+            return dist;
+        }
+
+        // Hàm in ma trận ra màn hình
+        function printMatrix(matrix, elementId) {
+            // Tạo chuỗi HTML để hiển thị ma trận
+            let matrixHtml = '<table>';
+            for (let i = 0; i < matrix.length; i++) {
+                matrixHtml += '<tr>';
+                for (let j = 0; j < matrix[i].length; j++) {
+                    matrixHtml += '<td>' + (matrix[i][j] === Infinity ? '-' : matrix[i][j]) + '</td>';
+                }
+                matrixHtml += '</tr>';
+            }
+            matrixHtml += '</table>';
+
+            // In ma trận ra màn hình
+            document.getElementById(elementId).innerHTML = matrixHtml;
+        }
+
+
+        // Hàm in kết quả ra màn hình
+        function printResult() {
+            // Khởi tạo ma trận đầu vào
+            let matrix = [
+                [0, 5, Infinity, 10],
+                [Infinity, 0, 3, Infinity],
+                [Infinity, Infinity, 0, 1],
+                [Infinity, Infinity, Infinity, 0]
+            ];
+
+            // Thực hiện thuật toán Floyd-Warshall
+            let result = floydWarshall(matrix);
+            // in ma trận đầu vào ra màn hình
+            printMatrix(matrix, 'graphMatrix');
+            // in ma trận kết quả.
+            printMatrix(result, 'result');
+        }
+    </script>
+</head>
+<body>
+    <!-- Tiêu đề của trang web -->
+    <h2>Thuật toán Floyd-Warshall</h2>
+    <!-- Mô tả về thuật toán -->
+    <p>Thuật toán Floyd-Warshall tìm đường đi ngắn nhất giữa mọi cặp đỉnh trong một đồ thị.</p>
+    <h3>Ma trận đầu vào</h3>
+    <div id="graphMatrix"></div>
+    <!-- Nút để thực hiện thuật toán và in kết quả -->
+    <button onclick="printResult()">kết quả</button>
+    <!-- Phần tử để hiển thị kết quả -->
+    <div id="result"></div>
+</body>
+</html>

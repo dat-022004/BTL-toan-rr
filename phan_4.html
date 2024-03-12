@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>BFS</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f0f0f0;
+      }
+
+      h2, h3 {
+          color: #333;
+      }
+
+      p {
+          color: #666;
+      }
+
+      button {
+          padding: 10px 20px;
+          background-color: #007BFF;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          margin-bottom: 20px;
+      }
+
+      button:hover {
+          background-color: #0056b3;
+      }
+
+      #result {
+          margin-bottom: 20px;
+          color: green;
+      }
+
+      table {
+          border-collapse: collapse;
+          width: 100%;
+          margin-bottom: 20px;
+      }
+
+      td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: center;
+      }
+
+      tr:nth-child(even) {
+          background-color: #f2f2f2;
+      }
+  </style>
+    <script>
+        // Định nghĩa một lớp Queue
+        class Queue {
+          constructor() {
+            this.items = [];  // Khởi tạo một mảng trống để lưu trữ các phần tử
+          }
+
+          // Phương thức để thêm một phần tử vào cuối hàng đợi
+          enqueue(element) {
+            this.items.push(element);
+          }
+
+          // Phương thức để loại bỏ một phần tử từ đầu hàng đợi
+          dequeue() {
+            if (this.isEmpty()) return null;
+            return this.items.shift();
+          }
+
+          // Phương thức để kiểm tra xem hàng đợi có trống không
+          isEmpty() {
+            return this.items.length === 0;
+          }
+        }
+
+        // Hàm để tìm đường đi ngắn nhất trong một đồ thị bằng BFS
+        function bfsMinCostPath(graph, start, end, costs) {
+            // Nếu đỉnh bắt đầu và kết thúc giống nhau, trả về đỉnh bắt đầu
+            if (start === end) {
+            return [start];
+            }
+
+            let queue = new Queue();  // Khởi tạo một Queue mới
+            let visited = new Array(graph.length).fill(false);  // Theo dõi các đỉnh đã được thăm
+            let minCosts = new Array(graph.length).fill(Infinity);  // Theo dõi chi phí tối thiểu
+            let papa = new Array(graph.length).fill(-1);  // Theo dõi cha của mỗi đỉnh
+
+            visited[start] = true;  // Đánh dấu đỉnh bắt đầu đã được thăm
+            minCosts[start] = 0;  // Chi phí để đến đỉnh bắt đầu là 0
+            queue.enqueue(start);  // Thêm đỉnh bắt đầu vào hàng đợi
+
+            // Trong khi hàng đợi không trống
+            while (!queue.isEmpty()) {
+                let currentVertex = queue.dequeue();  // Loại bỏ một đỉnh khỏi hàng đợi
+
+                // Đối với mỗi đỉnh lân cận của đỉnh hiện tại
+                for (let neighbor = 0; neighbor < graph.length; neighbor++) {
+                    // Nếu đỉnh lân cận chưa được thăm và có cạnh giữa đỉnh hiện tại và đỉnh lân cận
+                    if (graph[currentVertex][neighbor] === 1 && !visited[neighbor]) {
+                        // Tính toán chi phí mới để đến đỉnh lân cận
+                        let newCost = minCosts[currentVertex] + costs[currentVertex][neighbor];
+                        // Nếu chi phí mới nhỏ hơn chi phí hiện tại để đến đỉnh lân cận
+                        if (newCost < minCosts[neighbor]) {
+                            minCosts[neighbor] = newCost;  // Cập nhật chi phí để đến đỉnh lân cận
+                            papa[neighbor] = currentVertex;  // Cập nhật cha của đỉnh lân cận
+                            visited[neighbor] = true;  // Đánh dấu đỉnh lân cận đã được thăm
+                            queue.enqueue(neighbor);  // Thêm đỉnh lân cận vào hàng đợi
+                        }
+                    }
+                }
+            }
+
+            // Nếu không có đường đi đến đỉnh kết thúc, trả về một mảng trống
+            if (papa[end] === -1) {
+            return [];
+            }
+
+            let path = [];  // Khởi tạo một mảng để lưu trữ đường đi
+            let current = end;  // Bắt đầu tại đỉnh kết thúc
+            // Trong khi chúng ta chưa đến đỉnh bắt đầu
+            while (current !== -1) {
+            path.unshift(current);  // Thêm đỉnh hiện tại vào đầu đường đi
+            current = papa[current];  // Di chuyển đến cha của đỉnh hiện tại
+            }
+
+            return path;  // Trả về đường đi
+        }
+
+        // Hàm để in ma trận ra trang web dưới dạng một bảng
+        function printMatrix(matrix, elementId) {
+            let matrixHtml = '<table>';
+            for (let i = 0; i < matrix.length; i++) {
+                matrixHtml += '<tr>';
+                for (let j = 0; j < matrix[i].length; j++) {
+                  matrixHtml += '<td>' + (matrix[i][j] === Infinity ? '-' : matrix[i][j]) + '</td>';
+                }
+                matrixHtml += '</tr>';
+            }
+            matrixHtml += '</table>';
+            document.getElementById(elementId).innerHTML = matrixHtml;
+        }
+
+        // Hàm để in kết quả
+        function printResult() {
+            let graph = [
+                [0, 1, 1, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 1],
+                [0, 0, 0, 0]
+            ];
+
+            let costs = [
+                [0, 3, 11, Infinity],
+                [Infinity, 0, 7, Infinity],
+                [Infinity, Infinity, 0, 2],
+                [Infinity, Infinity, Infinity, 0]
+            ];
+
+            let startVertex = 0;
+            let endVertex = 3;
+
+            let minCostPath = bfsMinCostPath(graph, startVertex, endVertex, costs);
+            document.getElementById('result').innerHTML = "Đường đi ngắn nhất: " + minCostPath.join(" -> ");
+
+            printMatrix(graph, 'graphMatrix');  // In ma trận đồ thị
+            printMatrix(costs, 'costMatrix');  // In ma trận chi phí
+        }
+    </script>
+</head>
+<body>
+    <h2>Bài toán: Tìm đường đi ngắn nhất trong đồ thị bằng thuật toán BFS</h2>
+    <p>Cho một đồ thị và ma trận chi phí, hãy tìm đường đi ngắn nhất từ đỉnh bắt đầu đến đỉnh kết thúc.</p>
+     <h3>Ma trận đồ thị:</h3>
+    <div id="graphMatrix"></div>  <!-- Div này sẽ hiển thị ma trận đồ thị -->
+    <h3>Ma trận chi phí:</h3>
+    <div id="costMatrix"></div>  <!-- Div này sẽ hiển thị ma trận chi phí -->
+    <button onclick="printResult()">In kết quả</button>  <!-- Khi nút này được nhấn, hàm printResult sẽ được gọi -->
+    <div id="result"></div>  <!-- Div này sẽ hiển thị đường đi ngắn nhất -->
+</body>
+</html>
