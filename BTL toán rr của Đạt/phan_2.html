@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Tô màu bản đồ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        h3, h4 {
+            color: #333;
+            text-align: center;
+            padding: 20px 0;
+        }
+        p {
+            text-align: justify;
+            padding: 0 20px;
+        }
+        textarea {
+            display: block;
+            width: 80%;
+            margin: 20px auto;
+        }
+        button {
+            display: block;
+            width: 200px;
+            height: 40px;
+            margin: 20px auto;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #ketqua {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+    </style>
+   <script>
+    var n, C, x = [],d // Khai báo các biến
+    function show_kq() { // Hàm hiển thị kết quả
+        var kq = document.getElementById('ketqua') // Lấy phần tử có id là 'ketqua'
+        kq.innerHTML += +(++d)+' Cách tô màu: ' + x + '<br>' // Thêm kết quả vào phần tử 'ketqua'
+    }
+
+    function check_hx_khac_mau_nhau(i) { // Hàm kiểm tra hai hàng xóm có cùng màu không
+        for (var j= 0; j < i; j++)
+            if (C[i][j] == 1 && x[i] == x[j]) // Nếu hai hàng xóm cùng màu thì trả về false
+                return false
+        return true // Ngược lại trả về true
+    }
+
+    var Color=['ko biết','Xanh','Đỏ','Tím','Vàng'] // Mảng chứa các màu
+    function to_mau(i) { // Hàm tô màu
+        for (var mau = 1; mau <= 4; mau++) { // Duyệt qua từng màu
+            x[i] = Color[mau] // Gán màu cho quốc gia thứ i
+            if (check_hx_khac_mau_nhau(i)) { // Kiểm tra xem các hàng xóm có khác màu không
+                if (i == n - 1) { // Nếu đã tô màu cho tất cả các quốc gia
+                    show_kq() // Hiển thị kết quả
+                } else {
+                    to_mau(i + 1) // Tô màu cho quốc gia tiếp theo
+                }
+            }
+            x[i] = 0 // Đặt lại màu cho quốc gia thứ i
+        }
+    } 
+    function giai_toan() { // Hàm giải toán
+        var s = document.getElementById('ma-tran-ke').value // Lấy giá trị từ khung nhập liệu
+        C = s.split('\n'); // Tách chuỗi thành mảng
+        n = C.length; // Lấy số lượng quốc gia
+        for (var i = 0; i < n; i++) {
+            x[i] = 0 // Đặt lại màu cho tất cả các quốc gia
+        }
+        d = 0 // Đặt lại số lượng cách tô màu
+        to_mau(0) // Bắt đầu tô màu
+    }
+</script>
+</head>
+<body>
+    <style>
+        img{
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+    <h3>Bài toán tô màu bản đồ</h3> <!-- Tiêu đề của bài toán -->
+    <p>Có n quốc gia trên bản đồ, tìm cách dùng 4 màu để tô cho mỗi quốc gia, sao cho hàng xóm thì khác màu.</p> <!-- Mô tả bài toán -->
+    <h4>Nhập ma trận kề Cij=1 nếu nước i là hx với nước j:</h4> <!-- Hướng dẫn nhập dữ liệu -->
+    <textarea id="ma-tran-ke" rows="5" cols="50"></textarea> <!-- Khung nhập liệu -->
+    <button onclick="giai_toan()">Tìm cách tô màu</button> <!-- Nút bấm để giải bài toán -->
+    <div id="ketqua"></div> <!-- Khu vực hiển thị kết quả -->
+</body>
+</html>
+
+</body>
+</html>

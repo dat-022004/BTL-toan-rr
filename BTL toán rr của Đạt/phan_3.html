@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Liệt kê dãy con</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        h3 {
+            color: #333;
+            text-align: center;
+            padding: 20px 0;
+        }
+        button {
+            display: block;
+            width: 200px;
+            height: 40px;
+            margin: 20px auto;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+    </style>
+    <script>
+        // Hàm tạo ra tất cả các dãy con không rỗng của dãy số {1, 2, 3}
+        function subsets() {
+            var set = [1, 2, 3]; // Dãy số gốc
+            var subset = []; // Mảng lưu trữ các dãy con
+            // Duyệt qua tất cả các tổ hợp của dãy số gốc
+            for (var i = 0; i < (1 << set.length); i++) {
+                var currentSubset = []; // Dãy con hiện tại
+                // Kiểm tra từng phần tử của dãy số gốc
+                for (var j = 0; j < set.length; j++) {
+                    // Nếu phần tử thứ j nằm trong tổ hợp hiện tại
+                    if (i & (1 << j)) {
+                        // Thêm phần tử vào dãy con hiện tại
+                        currentSubset.push(set[j]);
+                    }
+                }
+                // Nếu dãy con hiện tại không rỗng
+                if (currentSubset.length > 0) {
+                    // Thêm dãy con vào mảng lưu trữ
+                    subset.push(currentSubset);
+                }
+            }
+            // Trả về mảng lưu trữ các dãy con
+            return subset;
+        }
+
+        // Hàm hiển thị tất cả các dãy con lên trang web
+        function displaySubsets() {
+            var subsetsList = subsets(); // Lấy tất cả các dãy con
+            var resultDiv = document.getElementById('result'); // Lấy phần tử HTML để hiển thị kết quả
+            resultDiv.innerHTML = ''; // Xóa kết quả cũ
+            // Duyệt qua tất cả các dãy con
+            for (var i = 0; i < subsetsList.length; i++) {
+                // Hiển thị dãy con lên trang web
+                resultDiv.innerHTML += subsetsList[i].join(', ') + '<br>';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h3>Liệt kê tất cả các dãy con không rỗng của dãy số {1, 2, 3}</h3>
+    <button onclick="displaySubsets()">Liệt kê</button> <!-- Khi nhấn nút, gọi hàm hiển thị các dãy con -->
+    <div id="result"></div> <!-- Phần tử HTML để hiển thị kết quả -->
+</body>
+</html>

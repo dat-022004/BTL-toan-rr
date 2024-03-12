@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giải bài toán</title>
+</head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+  }
+  h1 {
+    color: #333;
+    text-align: center;
+    padding: 20px 0;
+  }
+  button {
+    display: block;
+    width: 200px;
+    height: 40px;
+    margin: 20px auto;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  #result {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+  }
+</style>
+<body>
+
+  <script>
+    // Hàm giải bài toán: Tìm dãy số gồm 4 số tự nhiên liên tiếp có tổng là 20
+    function solveProblem() {
+      // Lặp qua giá trị của a từ 1 đến 20
+      for (let a = 1; a <= 20; a++) {
+        // Tính tổng của 4 số tự nhiên liên tiếp
+        let sum = a + (a + 1) + (a + 2) + (a + 3);
+
+        // Kiểm tra nếu tổng bằng 20, hiển thị kết quả và kết thúc hàm
+        if (sum === 20) {
+          document.getElementById('result').innerHTML = `Dãy số thỏa mãn: ${a}, ${a+1}, ${a+2}, ${a+3}`;
+          return;
+        }
+      }
+
+      // Nếu không tìm thấy dãy số thỏa mãn, hiển thị thông báo
+      document.getElementById('result').innerHTML = 'Không có dãy số nào thỏa mãn.';
+    }
+
+    // Hàm kiểm tra kết quả khi người dùng nhấn nút "Kiểm tra kết quả"
+    function checkResult() {
+      // Gọi hàm giải bài toán
+      solveProblem();
+    }
+  </script>
+
+  <!-- Tiêu đề của trang -->
+  <h1>Kết quả bài toán: Có bao nhiêu dãy số gồm 4 số tự nhiên liên tiếp và có tổng là 20?</h1>
+
+  <!-- Kết quả sẽ được hiển thị ở đây -->
+  <div id="result"></div>
+
+  <!-- Nút "Kiểm tra kết quả" để gọi hàm kiểm tra kết quả -->
+  <button onclick="checkResult()">Kiểm tra kết quả</button>
+
+</body>
+</html>
